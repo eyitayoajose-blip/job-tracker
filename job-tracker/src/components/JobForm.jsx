@@ -1,81 +1,83 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 const JobForm = ({ addJob }) => {
-
-  const [company, setCompany] = useState("");
-  const [position, setPosition] = useState("");
-  const [status, setStatus] = useState("Applied");
-  const [deadline, setDeadline] = useState("");
+  const [company, setCompany] = useState('');
+  const [position, setPosition] = useState('');
+  const [status, setStatus] = useState('Applied');
+  const [notes, setNotes] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const newJob = {
+    if (!company || !position) {
+      alert('Please fill in company and position');
+      return;
+    }
+    
+    addJob({
       id: Date.now(),
       company,
       position,
       status,
-      deadline,
-    };
-
-    addJob(newJob);
-
-    setCompany("");
-    setPosition("");
-    setStatus("Applied");
-    setDeadline("");
+      notes,
+      date: new Date().toISOString().split('T')[0]
+    });
+    
+    setCompany('');
+    setPosition('');
+    setStatus('Applied');
+    setNotes('');
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-slate-800 m-6 p-6 rounded-2xl shadow-lg"
-    >
-
-      <div className="grid md:grid-cols-2 gap-4">
-
-        <input
-          type="text"
-          placeholder="Company Name"
-          value={company}
-          onChange={(e) => setCompany(e.target.value)}
-          className="p-3 rounded-lg bg-slate-700 outline-none"
-          required
-        />
-
-        <input
-          type="text"
-          placeholder="Position"
-          value={position}
-          onChange={(e) => setPosition(e.target.value)}
-          className="p-3 rounded-lg bg-slate-700 outline-none"
-          required
-        />
-
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-colors duration-300">
+      <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">➕ Add New Application</h2>
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="Company Name *"
+            value={company}
+            onChange={(e) => setCompany(e.target.value)}
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-gray-700 dark:text-white transition-colors"
+          />
+          
+          <input
+            type="text"
+            placeholder="Position *"
+            value={position}
+            onChange={(e) => setPosition(e.target.value)}
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-gray-700 dark:text-white transition-colors"
+          />
+        </div>
+        
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="p-3 rounded-lg bg-slate-700"
+          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-gray-700 dark:text-white transition-colors"
         >
-          <option>Applied</option>
-          <option>Interview</option>
-          <option>Offer</option>
+          <option value="Applied">Applied</option>
+          <option value="Interview">Interview</option>
+          <option value="Offer">Offer</option>
+          <option value="Rejected">Rejected</option>
         </select>
-
-        <input
-          type="date"
-          value={deadline}
-          onChange={(e) => setDeadline(e.target.value)}
-          className="p-3 rounded-lg bg-slate-700"
-        />
-
-      </div>
-
-      <button className="bg-cyan-500 mt-5 px-6 py-3 rounded-lg hover:bg-cyan-600 transition">
-        Add Job
-      </button>
-
-    </form>
+        
+        <textarea
+          placeholder="Notes (optional)"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          rows="3"
+          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-gray-700 dark:text-white transition-colors"
+        ></textarea>
+        
+        <button
+          type="submit"
+          className="w-full bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
+        >
+          Add Application
+        </button>
+      </form>
+    </div>
   );
 };
 
